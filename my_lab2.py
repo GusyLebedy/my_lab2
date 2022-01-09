@@ -9,14 +9,6 @@ def check_num(anime_num, user_num):
             return False
 
 
-def check_genre(anime_genre, user_genre):
-    for word in user_genre:
-        if word not in anime_genre:
-            return False
-        else:
-            return True
-
-
 def check_bank(anime_bank, user_bank):
     for word in user_bank:
         if word in anime_bank:
@@ -63,16 +55,19 @@ with open('anime.csv', 'r', encoding='utf-8') as f:
     wr = csv.DictReader(f, delimiter=',')
     top_anime = []
     for row in wr:
-        if anime_comparison('Rating Score', check_num, user_score, row):
-            if anime_comparison('Episodes', check_num, user_episodes, row):
-                if anime_comparison('Tags', check_genre, user_tags, row):
-                    if anime_comparison('Content Warning', check_bank, user_warning, row):
-                        if anime_comparison('Type', check_bank, user_type, row):
-                            if anime_comparison('Finished', check_truth, user_finished, row):
-                                if anime_comparison('Studios', check_bank, user_studios, row):
-                                    if anime_comparison('Duration', check_num, user_duration, row):
-                                        if anime_comparison('StartYear', check_num, user_startYear, row):
-                                            top_anime.append(row['Name'])
+        key_score = anime_comparison('Rating Score', check_num, user_score, row)
+        key_episodes = anime_comparison('Episodes', check_num, user_episodes, row)
+        key_genre = anime_comparison('Tags', check_bank, user_tags, row)
+        key_warnings = anime_comparison('Content Warning', check_bank, user_warning, row)
+        key_types = anime_comparison('Type', check_bank, user_type, row)
+        key_finish = anime_comparison('Finished', check_truth, user_finished, row)
+        key_studio = anime_comparison('Studios', check_bank, user_studios, row)
+        key_duration = anime_comparison('Duration', check_num, user_duration, row)
+        key_start = anime_comparison('StartYear', check_num, user_startYear, row)
+        filter_keys = [key_score, key_episodes, key_genre, key_warnings, key_types, key_finish, key_studio,
+                       key_duration, key_start]
+        if all(filter_keys):
+            top_anime.append(row['Name'])
 
 with open('anime_top.txt', 'w', encoding='utf-8') as f:
     for name in range(len(top_anime)):
